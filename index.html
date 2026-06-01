@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>魔女裁判·冒险阅读 - 献给瞳</title>
+<style>
+body{font-family:Arial,sans-serif;background:#111;color:#eee;padding:10px;max-width:500px;margin:auto}
+h1{text-align:center;color:#f6a;font-size:18px;margin:10px 0}
+.s{display:flex;gap:6px;margin-bottom:10px}
+.s div{flex:1;background:#222;border-radius:8px;padding:8px;text-align:center}
+.s div b{display:block;font-size:18px;color:#fd0}
+.s div small{font-size:11px;color:#888}
+.t{display:flex;gap:4px;margin-bottom:10px;overflow-x:auto}
+.t div{padding:6px 10px;border-radius:6px;background:#222;font-size:11px;cursor:pointer;white-space:nowrap;color:#888;flex-shrink:0}
+.t .a{background:#636;color:#fff}
+.t .l{opacity:.4;cursor:default}
+.st{background:linear-gradient(135deg,rgba(255,105,180,.1),rgba(0,212,255,.05));border:1px solid rgba(255,105,180,.2);border-radius:10px;padding:14px;margin-bottom:10px}
+.st .db{display:inline-block;padding:2px 10px;border-radius:20px;background:linear-gradient(135deg,#f6a,#96a);font-size:10px;color:#fff;margin-bottom:6px}
+.st h3{color:#fd0;font-size:16px;margin-bottom:6px}
+.st p{font-size:12px;line-height:1.6;opacity:.9}
+.pg{background:rgba(0,0,0,.3);border-radius:8px;padding:12px;margin-bottom:10px;font-size:12px;line-height:1.7}
+.qb{padding:8px 0;border-top:1px solid #333;margin-bottom:4px}
+.qb .qt{font-size:12px;margin-bottom:6px;color:#4cf}
+.qb .os{display:grid;gap:4px}
+.qb .o{padding:7px 10px;border-radius:6px;background:#222;border:1px solid #333;font-size:12px;cursor:pointer;text-align:left;color:#eee}
+.qb .o.c{border-color:#2c2;background:#1a3a1a;color:#2c2}
+.qb .o.w{border-color:#c33;background:#3a1a1a;color:#c33}
+.qb .o.d{pointer-events:none;opacity:.5}
+.qb .e{display:none;margin-top:6px;padding:6px;border-radius:6px;background:rgba(0,212,255,.06);font-size:11px;color:#4cf}
+.dn{display:none;text-align:center;padding:24px 16px;background:linear-gradient(135deg,rgba(255,105,180,.1),rgba(0,212,255,.1));border-radius:12px;border:2px solid #fd0;margin-bottom:10px}
+.dn h2{font-size:22px;color:#fd0;margin-bottom:6px}
+.dn p{font-size:13px;color:#eee;margin:6px 0}
+.bs{text-align:center;margin:8px 0}
+.bs button{padding:6px 14px;border-radius:6px;border:0;background:linear-gradient(135deg,#fd0,#f6a);color:#000;font-size:12px;cursor:pointer;margin:4px}
+.ft{text-align:center;padding:16px;font-size:10px;color:#555}
+.l{text-align:center;padding:40px;color:#888;font-size:14px}
+</style>
+</head>
+<body>
+<h1>✦ 魔女裁判·冒险阅读 ✦</h1>
+<div class="s">
+<div><b id="sn">0</b><small>裁决点</small></div>
+<div><b id="sd">1</b><small>天</small></div>
+<div><b id="sc">0</b><small>完成</small></div>
+</div>
+<div class="t" id="tb"></div>
+<div id="content"><div class="l">加载中…</div></div>
+<div class="bs"><button onclick="rp()">🔄 重置</button></div>
+<div class="dn" id="dn"><h2>✦ 通关 ✦</h2><p>全部12关通过！<br>瞳，你通过了魔女之王的所有试炼 ✨</p></div>
+<div class="ft">瞳孔中的魔法少女 ✨</div>
+<script>
+var RD = null;
+var SK = 'c6r', ST = {d:1,s:0,dn:[]};
+var stories = [
+  "序章·星宫庭的召唤","月下·镜之魔女","钟楼·时计魔女","书库·禁书魔女","舞台·傀儡魔女","梦境·噬梦魔女",
+  "深渊·沉默魔女","镜廊·虚像魔女","迷宫·因果魔女","祭坛·审判魔女","塔顶·宿命魔女","终焉·魔女之王"
+];
+var storyDesc = [
+  "魔法学园的魔女裁判开启了。低语魔女封印了基本咒文——只有解开封印才能迈出第一步。",
+  "镜之魔女降临，她的反射魔法能反弹一切攻击。魔法少女们必须在镜迷宫中找到真正的关键词。",
+  "时计魔女逆转了钟楼的指针，制造了时间的裂隙。魔法少女们在时间之隙中收集散落的咒文。",
+  "禁书魔女焚烧着地下书库的古籍。魔法少女们必须在灰烬中抢救即将消失的知识。",
+  "傀儡魔女的丝线操控着整场演出。只有答出咒文的真正含义，丝线才会断裂。",
+  "无尽的梦境空间中，噬梦魔女蚕食着少女们的记忆。她们必须夺回正在消失的咒文。",
+  "螺旋阶梯的尽头是绝对的寂静。沉默魔女剥夺了所有声音，魔法少女们只能靠文字感知力量。",
+  "无限延伸的镜面长廊中，真假咒文混杂。魔法少女们必须辨认真伪。",
+  "因果魔女颠倒了世界，选错答案就会回到原点。魔法少女们重新排列因果，逼近真相。",
+  "审判魔女站在古老祭坛上，发起记忆的最终审查。每道咒文都曾是她们路上的试炼。",
+  "宿命魔女让咒文的过去与未来同时呈现。魔法少女必须在两重时间维度中理解每一个词。",
+  "魔女之王坐在审判王座上。每一个词语、每一个选择，都造就了真正的魔法少女。"
+];
+
+function ld(){
+  try{var x=localStorage.getItem(SK);if(x){var p=JSON.parse(x);ST={d:p.d||1,s:p.s||0,dn:p.dn||[]};}}catch(e){}
+  if(ST.d<1)ST.d=1;if(ST.d>12)ST.d=12;
+}
+function sv(){try{localStorage.setItem(SK,JSON.stringify(ST));}catch(e){}}
+function us(){
+  document.getElementById('sn').textContent=ST.s;
+  document.getElementById('sd').textContent=ST.d;
+  document.getElementById('sc').textContent=ST.dn.length;
+}
+function tb(){
+  var mu=Math.min(ST.d+1,12),h='';
+  for(var i=1;i<=12;i++){
+    var c=i===ST.d?' a':(i<=mu?'':' l');
+    h+='<div class="t'+c+'" onclick="'+(i<=mu?'sd('+i+')':'')+'">D'+i+'<br><small>'+stories[i-1].substring(0,2)+'</small></div>';
+  }
+  document.getElementById('tb').innerHTML=h;
+}
+function sd(d){if(d>ST.d+1)return;ST.d=d;sv();rd();}
+
+function rd(){
+  if(!RD)return;
+  tb();us();var di=ST.d-1;
+  var h='<div class="st"><div class="db">Day '+ST.d+'</div><h3>'+stories[di]+'</h3><p>'+storyDesc[di]+'</p></div>';
+  var r=RD[di]?RD[di][0]:null;
+  if(r){
+    h+='<div class="pg">'+r.passage+'</div><div id="qs">';
+    for(var i=0;i<r.questions.length;i++){
+      var q=r.questions[i],oh='';
+      for(var j=0;j<q.opts.length;j++){
+        oh+='<div class="o" data-q="'+i+'" data-o="'+j+'" onclick="ar('+di+','+i+','+j+')">'+String.fromCharCode(65+j)+'. '+q.opts[j]+'</div>';
+      }
+      h+='<div class="qb"><div class="qt">Q'+(i+1)+'. '+q.q+'</div><div class="os">'+oh+'</div><div class="e" id="e'+i+'"></div></div>';
+    }
+    h+='</div>';
+  }
+  document.getElementById('content').innerHTML=h;
+  if(ST.d>=12&&ST.dn.length>=12)document.getElementById('dn').style.display='block';
+  else document.getElementById('dn').style.display='none';
+}
+
+function ar(di,qi,oi){
+  var r=RD[di]?RD[di][0]:null;if(!r)return;
+  var q=r.questions[qi];
+  document.querySelectorAll('.o[data-q="'+qi+'"]').forEach(function(o){
+    o.classList.add('d');var no=parseInt(o.dataset.o);
+    if(no===q.ans)o.classList.add('c');
+    if(no===oi&&oi!==q.ans)o.classList.add('w');
+  });
+  var ex=document.getElementById('e'+qi);ex.style.display='block';
+  if(oi===q.ans){ex.textContent='✓ 正确 +10';if(ST.dn.indexOf(di)<0){ST.s+=10;ST.dn.push(di);}}
+  else{ex.textContent='✗ 正确答案是 '+String.fromCharCode(65+q.ans);}
+  sv();us();
+}
+
+function rp(){if(!confirm('重置?'))return;ST={d:1,s:0,dn:[]};sv();rd();}
+
+ld();
+fetch('data.json').then(function(r){return r.json();}).then(function(d){
+  RD=d;rd();
+}).catch(function(e){document.getElementById('content').innerHTML='<div class="l">加载失败: '+e.message+'</div>';});
+</script>
+</body>
+</html>
